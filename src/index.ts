@@ -9,8 +9,7 @@ import connectRedis from "connect-redis";
 import { redis } from "./redis";
 import cors from "cors";
 import { LoginResolver } from "./modules/user/Login";
-
-const RedisStore = connectRedis(session);
+import { MeResolver } from "./modules/user/Me";
 
 const main = async () => {
   await createConnection();
@@ -19,10 +18,12 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [RegisterResolver, LoginResolver],
+      resolvers: [RegisterResolver, LoginResolver, MeResolver],
     }),
     context: ({ req }: any) => ({ req }),
   });
+
+  const RedisStore = connectRedis(session);
 
   app.use(
     cors({
@@ -31,37 +32,22 @@ const main = async () => {
     })
   );
 
-  // const sessionOption: session.SessionOptions = {
-  //   store: new RedisStore({
-  //     client: redis as any,
-  //   }),
-  //   name: "qid",
-  //   secret: "sarzy",
-  //   resave: false,
-  //   saveUninitialized: false,
-  //   cookie: {
-  //     httpOnly: true,
-  //     secure: process.env.NODE_ENV === "production",
-  //     maxAge: 1000 * 60 * 60 * 24 * 7 * 365, // 7 years
-  //   },
-  // };
+  const sessionOption: session.SessionOptions = {
+    store: new RedisStore({
+      client: redis as any,
+    }),
+    name: "qid",
+    secret: "sarzy",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24 * 7 * 365, // 7 years
+    },
+  };
 
-  app.use(
-    session({
-      store: new RedisStore({
-        client: redis as any,
-      }),
-      name: "qid",
-      secret: "halala",
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 1000 * 60 * 60 * 24 * 7 * 365,
-      },
-    })
-  );
+  app.use(session(sessionOption));
 
   apolloServer.applyMiddleware({ app });
 

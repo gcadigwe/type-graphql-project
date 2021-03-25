@@ -1,11 +1,11 @@
 import { User } from "../../entity/User";
 import bcrypt from "bcryptjs";
 import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
-import { MyContext } from "../../Types/MyContext";
+import { MyContext } from "../../types/MyContext";
 
 @Resolver()
 export class LoginResolver {
-  @Mutation(() => User)
+  @Mutation(() => User, { nullable: true })
   async login(
     @Arg("email") email: string,
     @Arg("password") password: string,
@@ -23,7 +23,6 @@ export class LoginResolver {
       return null;
     }
 
-    // ctx.req.session!.userId = user.id;
     ctx.req.session!.userId = user.id;
 
     return user;
