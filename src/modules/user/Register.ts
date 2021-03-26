@@ -2,9 +2,9 @@ import { User } from "../../entity/User";
 import { RegisterInput } from "./register/Registerinput";
 import bcrypt from "bcryptjs";
 import { Resolver, Query, Mutation, Arg, UseMiddleware } from "type-graphql";
-import { isAuth } from "./Middleware/isAuth";
-import { sendEmail } from "../utils.sendemail";
-import { createConfirmationUrl } from "../createconfirmation";
+import { isAuth } from "../Middleware/isAuth";
+import { sendEmail } from "../utils/utils.sendemail";
+import { createConfirmationUrl } from "../utils/createconfirmation";
 
 @Resolver()
 export class RegisterResolver {

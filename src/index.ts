@@ -3,13 +3,15 @@ import { ApolloServer } from "apollo-server-express";
 import express from "express";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import { RegisterResolver } from "./modules/user/Register";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import { redis } from "./redis";
 import cors from "cors";
-import { LoginResolver } from "./modules/user/Login";
-import { MeResolver } from "./modules/user/Me";
+// import { MeResolver } from "./modules/user/Me";
+// import { ConfirmResolver } from "./modules/user/Confirm";
+// import { ForgotPasswordResolver } from "./modules/user/ForgotPassword";
+// import { LoginResolver } from "./modules/user/Login";
+// import { RegisterResolver } from "./modules/user/Register";
 
 const main = async () => {
   await createConnection();
@@ -18,7 +20,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [RegisterResolver, LoginResolver, MeResolver],
+      resolvers: [__dirname + "/modules/**/*.ts"],
       authChecker: ({ context: { req } }) => {
         // here we can read the user from context
         // and check his permission in the db against the `roles` argument
