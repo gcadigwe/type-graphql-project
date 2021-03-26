@@ -1,10 +1,11 @@
 // import { MaxLength, Length } from "class-validator";
 import { Length, IsEmail } from "class-validator";
+import { passwordInput } from "../../shared/passwordinput";
 import { Field, InputType } from "type-graphql";
 import { isEmailAlreadyUsed } from "./isEmailAlreadyUsed";
 
 @InputType()
-export class RegisterInput {
+export class RegisterInput extends passwordInput {
   @Field()
   @Length(1, 255)
   firstName: string;
@@ -12,9 +13,6 @@ export class RegisterInput {
   @Field()
   @Length(1, 255)
   lastName: string;
-
-  @Field()
-  password: string;
 
   @Field()
   @IsEmail()

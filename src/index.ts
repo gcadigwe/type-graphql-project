@@ -31,7 +31,7 @@ const main = async () => {
         return false; // or false if access is denied
       },
     }),
-    context: ({ req }: any) => ({ req }),
+    context: ({ req, res }: any) => ({ req, res }),
   });
 
   const RedisStore = connectRedis(session);
